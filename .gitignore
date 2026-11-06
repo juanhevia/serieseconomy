@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Ventanas derivadas: regenerar con python -m scripts.prepare_data
+data/processed/

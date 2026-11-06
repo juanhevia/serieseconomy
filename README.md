@@ -4,7 +4,25 @@ Caso práctico de predicción del precio del petróleo Brent mediante redes RNN,
 
 ## Estado
 
-Preparación del entorno y análisis exploratorio completados. Los modelos, la comparativa y la aplicación todavía no están implementados.
+Preparación del entorno, análisis exploratorio y preparación univariante del Brent completados. La referencia ingenua está evaluada en validación y en tres folds temporales. Las redes, su comparativa y la aplicación todavía no están implementadas; la prueba final sigue reservada.
+
+## Datos listos para entrenar
+
+La primera versión utiliza el histórico del Brent como única entrada. Genera ventanas de 60 filas, objetivos a 5, 63 y 252 días lunes-viernes y escaladores ajustados solo en entrenamiento. Las fechas sin precio objetivo observado se excluyen.
+
+```bash
+poetry run python -m scripts.prepare_data
+poetry run python -m scripts.evaluate_baseline
+poetry run python -m unittest discover -s tests -v
+```
+
+Estos comandos utilizan la copia sin rellenar incluida en `data/raw/` y funcionan sin conexión después de instalar las dependencias. Las ventanas de `data/processed/` se regeneran y no se suben a GitHub.
+
+- [Guía de preparación y uso de las ventanas](docs/preparacion_datos.md).
+- [Informe de preparación y tamaños de los bloques](reports/preparacion.md).
+- [Resultados de la referencia ingenua en validación](reports/baseline_validation.md).
+
+Se supone un retraso de publicación de tres días lunes-viernes, configurable. No representa fechas de publicación históricas verificadas ni corrige revisiones posteriores de los datos. La extensión multivariante está pendiente.
 
 ## Análisis exploratorio
 
@@ -12,7 +30,7 @@ Preparación del entorno y análisis exploratorio completados. Los modelos, la c
 - [Informe HTML](reports/01_exploracion.html): descargar y abrir en el navegador para leerlo sin ejecutar Python.
 - [Gráficos exportados](reports/figures): cobertura, histórico, variaciones, partición temporal y correlaciones.
 
-El análisis conserva el CSV y comprueba fechas, valores faltantes y extremos. Propone bloques cronológicos 70/15/15 y muestra cómo evitar que los objetivos futuros crucen sus límites. Las correlaciones se calculan solo en entrenamiento. La copia descargada ya contiene relleno hacia delante: antes de entrenar hay que recuperar observaciones originales y definir el calendario y los retrasos de publicación.
+El análisis conserva el CSV y comprueba fechas, valores faltantes y extremos. Propone bloques cronológicos 70/15/15 y muestra cómo evitar que los objetivos futuros crucen sus límites. Las correlaciones se calculan solo en entrenamiento. La preparación posterior recupera una copia independiente del Brent sin rellenar y conserva los cortes por fecha de esta exploración.
 
 ## Materiales de la asignatura
 
@@ -58,8 +76,8 @@ El resultado se guarda en `data/petroleo_dataset.csv`. Estas fuentes no necesita
 
 ## Trabajo pendiente
 
-1. Recuperar observaciones sin rellenar y preparar ventanas, calendario y variables disponibles sin utilizar información futura.
-2. Comparar RNN, LSTM y GRU con un modelo ingenuo, usando validación temporal.
+1. Entrenar y comparar RNN, LSTM y GRU con la referencia ingenua, usando los mismos bloques y validación temporal.
+2. Ampliar la preparación con variables externas y su disponibilidad documentada, comparando con la versión univariante.
 3. Evaluar horizontes de 5, 63 y 252 días hábiles y cuantificar la incertidumbre.
 4. Integrar el modelo elegido en una aplicación Python y documentar su ejecución.
 5. Preparar la presentación exigida en el enunciado.

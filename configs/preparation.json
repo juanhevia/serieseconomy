@@ -1,0 +1,13 @@
+{
+  "experiment": "brent_univariate_v1",
+  "start": "2000-01-01",
+  "as_of": "2026-11-05",
+  "validation_start": "2018-10-18",
+  "test_start": "2022-10-27",
+  "window": 60,
+  "horizons": [5, 63, 252],
+  "publication_lag_bdays": 3,
+  "max_forward_fill_bdays": 5,
+  "walk_forward_starts": ["2012-01-02", "2014-01-01", "2016-01-01"],
+  "raw_path": "data/raw/brent_2000-01-01_2026-11-05.csv"
+}

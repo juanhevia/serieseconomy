@@ -1,0 +1,14 @@
+{
+  "series": "DCOILBRENTEU",
+  "source": "U.S. Energy Information Administration via FRED",
+  "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2000-01-01&coed=2026-11-05",
+  "downloaded_at_utc": "2026-11-06T11:56:42.486760+00:00",
+  "requested_start": "2000-01-01",
+  "requested_end": "2026-11-05",
+  "sha256": "ae1d1210a122d4ed018040d38a2d48cd508b5b93b9ed4e7d416334bd645255f3",
+  "response_sha256": "d34f7fd2edc323cd23ab078eadfe99de476e7836785c2dfbd500269fe3a41bfc",
+  "rows": 7001,
+  "observed_prices": 6501,
+  "transformation": "Columnas renombradas; nulos conservados; sin relleno ni recorte de extremos.",
+  "vintage_warning": "Histórico descargado hoy, potencialmente revisado. No es una reconstrucción de lo publicado en cada fecha pasada."
+}
