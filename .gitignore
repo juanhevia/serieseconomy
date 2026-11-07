@@ -221,3 +221,7 @@ __marimo__/
 
 # Ventanas derivadas: regenerar con python -m scripts.prepare_data
 data/processed/
+
+# Pesos y resultados locales de entrenamiento (guardar copia externa)
+runs/
+.venv-*/

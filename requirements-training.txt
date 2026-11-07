@@ -1,0 +1,4 @@
+# Para el laboratorio (Linux/Windows). Instalar en el entorno del proyecto.
+# Elegir el paquete CUDA compatible con el equipo según la guía oficial.
+# La variante de PyTorch y su versión efectiva se registran al ejecutar.
+torch>=2.6,<3.0

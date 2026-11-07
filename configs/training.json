@@ -1,0 +1,15 @@
+{
+  "architectures": ["RNN", "LSTM", "GRU"],
+  "horizons": [5, 63, 252],
+  "candidates": [
+    {"hidden_size": 16, "learning_rate": 0.001},
+    {"hidden_size": 32, "learning_rate": 0.001}
+  ],
+  "max_epochs": 40,
+  "patience": 6,
+  "min_delta": 0.00001,
+  "batch_size": 128,
+  "gradient_clip": 1.0,
+  "seed": 42,
+  "cpu_threads": 2
+}

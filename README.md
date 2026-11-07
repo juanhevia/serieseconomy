@@ -4,7 +4,22 @@ Caso práctico de predicción del precio del petróleo Brent mediante redes RNN,
 
 ## Estado
 
-Preparación del entorno, análisis exploratorio y preparación univariante del Brent completados. La referencia ingenua está evaluada en validación y en tres folds temporales. Las redes, su comparativa y la aplicación todavía no están implementadas; la prueba final sigue reservada.
+Preparación del entorno, análisis exploratorio y preparación univariante del Brent completados. La referencia ingenua está evaluada en validación y en tres folds temporales. El código de RNN, LSTM y GRU está preparado para entrenar en el laboratorio y se comprueba con datos sintéticos. **Las redes todavía no están entrenadas con los datos reales**, la prueba final sigue reservada y la aplicación está pendiente.
+
+## Entrenamiento en el laboratorio
+
+La [guía paso a paso](docs/entrenamiento_laboratorio.md) explica la instalación de PyTorch con GPU, las comprobaciones y cómo guardar o reanudar el trabajo.
+
+Con el entorno configurado y la GPU disponible:
+
+```bash
+python -m scripts.train_models --device cuda --check
+python -m scripts.prepare_data
+python -m scripts.train_models --device cuda --dry-run
+python -m scripts.train_models --device cuda --output runs/laboratorio
+```
+
+El último comando realiza la búsqueda temporal y los ajustes principales de las tres redes. Guarda pesos y resultados en `runs/laboratorio/` y no abre prueba. Si se interrumpe, repetir el mismo comando reutiliza los ajustes terminados y repite el ajuste incompleto. **La carpeta de resultados está excluida de Git: copiarla al almacenamiento personal antes de dejar el laboratorio.**
 
 ## Datos listos para entrenar
 
@@ -76,7 +91,7 @@ El resultado se guarda en `data/petroleo_dataset.csv`. Estas fuentes no necesita
 
 ## Trabajo pendiente
 
-1. Entrenar y comparar RNN, LSTM y GRU con la referencia ingenua, usando los mismos bloques y validación temporal.
+1. Ejecutar en el laboratorio el entrenamiento real de RNN, LSTM y GRU y revisar su comparación con la referencia ingenua.
 2. Ampliar la preparación con variables externas y su disponibilidad documentada, comparando con la versión univariante.
 3. Evaluar horizontes de 5, 63 y 252 días hábiles y cuantificar la incertidumbre.
 4. Integrar el modelo elegido en una aplicación Python y documentar su ejecución.
