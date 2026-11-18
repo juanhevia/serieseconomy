@@ -21,6 +21,16 @@ python -m scripts.train_models --device cuda --output runs/laboratorio
 
 El último comando realiza la búsqueda temporal y los ajustes principales de las tres redes. Guarda pesos y resultados en `runs/laboratorio/` y no abre prueba. Si se interrumpe, repetir el mismo comando reutiliza los ajustes terminados y repite el ajuste incompleto. **La carpeta de resultados está excluida de Git: copiarla al almacenamiento personal antes de dejar el laboratorio.**
 
+Después de terminar y fijar el procedimiento, la evaluación final se ejecuta por separado:
+
+```bash
+python -m scripts.evaluate_test --run runs/laboratorio --device cuda
+```
+
+Genera R², MAE, MSE y RMSE, compara con persistencia y dibuja valores reales frente a predichos y errores por fecha. También guarda métricas por año y los mayores errores para analizar cuándo falla. Utiliza los pesos y escaladores guardados, sin reentrenar. El código se comprueba con datos artificiales; los resultados reales de prueba siguen pendientes. Consulta la guía antes de abrir prueba: ese bloque no debe usarse para elegir hiperparámetros.
+
+La actualización de la futura aplicación se centrará en incorporar observaciones desde un CSV manual y predecir con el modelo existente. Esta funcionalidad todavía está pendiente; no requiere automatizar una API ni entrenar cada día.
+
 ## Datos listos para entrenar
 
 La primera versión utiliza el histórico del Brent como única entrada. Genera ventanas de 60 filas, objetivos a 5, 63 y 252 días lunes-viernes y escaladores ajustados solo en entrenamiento. Las fechas sin precio objetivo observado se excluyen.
@@ -93,8 +103,8 @@ El resultado se guarda en `data/petroleo_dataset.csv`. Estas fuentes no necesita
 
 1. Ejecutar en el laboratorio el entrenamiento real de RNN, LSTM y GRU y revisar su comparación con la referencia ingenua.
 2. Ampliar la preparación con variables externas y su disponibilidad documentada, comparando con la versión univariante.
-3. Evaluar horizontes de 5, 63 y 252 días hábiles y cuantificar la incertidumbre.
-4. Integrar el modelo elegido en una aplicación Python y documentar su ejecución.
+3. Ejecutar la evaluación final preparada para horizontes de 5, 63 y 252 días lunes-viernes, interpretar los aciertos y errores y cuantificar la incertidumbre.
+4. Integrar el modelo elegido en una aplicación Python con actualización manual por CSV sin reentrenar y documentar su ejecución.
 5. Preparar la presentación exigida en el enunciado.
 
 No guardar tokens ni otras credenciales en el código o en este repositorio.

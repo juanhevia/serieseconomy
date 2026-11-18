@@ -15,7 +15,23 @@ Si ya tienes una copia, entra en ella y ejecuta `git pull --ff-only`. Todos los 
 
 ## 2. Preparar Python y PyTorch
 
-Usa **Python 3.12**. Si el profesor proporciona un entorno con GPU configurada, utiliza sus indicaciones para activar ese entorno e instalar las dependencias. No hace falta reinstalar el controlador de la GPU desde este proyecto.
+El proyecto requiere **Python 3.12 o superior**. Si el profesor proporciona un entorno con GPU configurada, utiliza sus indicaciones para activar ese entorno e instalar las dependencias. No hace falta reinstalar el controlador de la GPU desde este proyecto.
+
+### Equipo del laboratorio con AMD y Python 3.14
+
+El equipo consultado tiene Ubuntu 26.04, Python 3.14, una Radeon RX 6700 XT y bibliotecas ROCm 7.1 instaladas mediante paquetes de Ubuntu. No requiere `nvidia-smi` ni que exista `/opt/rocm/.info/version`. Con el entorno `.venv` ya activado, la instalación propuesta para comprobarlo es:
+
+```bash
+python -m pip install --upgrade pip "numpy>=2.5.4,<3" "pandas>=3.1,<4" "matplotlib>=3.11.2,<4"
+python -m pip install "torch==2.10.0+rocm7.1" --index-url https://download.pytorch.org/whl/rocm7.1
+python -m scripts.train_models --device cuda --check
+```
+
+El [índice oficial de PyTorch](https://download.pytorch.org/whl/rocm7.1/torch/) contiene el paquete para Python 3.14. La presencia del paquete y la detección en `rocminfo` no garantizan que las operaciones de las redes funcionen en esta tarjeta: debe pasar la comprobación. No se ha verificado todavía en este equipo. PyTorch usa el nombre `cuda` también con AMD/ROCm, como explica su [documentación de HIP](https://docs.pytorch.org/docs/stable/notes/hip.html).
+
+NumPy, pandas, PyTorch y matplotlib bastan para preparar las ventanas, entrenar y evaluar desde la copia de datos ya incluida. Para ejecutar también el cuaderno o descargar nuevos datos, instala las dependencias completas con Poetry como se indica debajo.
+
+### Entorno general con Python 3.12
 
 Para crear un entorno propio en Linux:
 
@@ -36,9 +52,9 @@ py -3.12 -m venv .venv
 
 Después se usan los mismos comandos de instalación con `python`, `pip` y `poetry`.
 
-**La instalación de PyTorch debe ser compatible con la GPU y el controlador del laboratorio.** El archivo `requirements-training.txt` solicita PyTorch 2.6 o superior de la serie 2.x; no fija una variante de CUDA porque todavía no conocemos el equipo. Para NVIDIA, comprueba la instalación con el paso 3. Si no detecta CUDA, usa el comando correspondiente al equipo en el [selector oficial de PyTorch](https://pytorch.org/get-started/locally/), o la instalación indicada por el profesor. No continúes con el entrenamiento hasta que la comprobación termine correctamente.
+**La instalación de PyTorch debe ser compatible con la GPU y el controlador del laboratorio.** El archivo `requirements-training.txt` solicita PyTorch 2.6 o superior de la serie 2.x; no fija una variante de GPU. Para NVIDIA, comprueba la instalación con el paso 3. Si no detecta CUDA, usa el comando correspondiente al equipo en el [selector oficial de PyTorch](https://pytorch.org/get-started/locally/), o la instalación indicada por el profesor. Para el equipo AMD anterior utiliza la variante ROCm indicada arriba. No continúes con el entrenamiento en GPU hasta que la comprobación termine correctamente.
 
-PyTorch se instala aparte del archivo `poetry.lock` para poder elegir la variante de GPU. El programa registra las versiones efectivas de Python, NumPy, PyTorch, CUDA y cuDNN. `poetry install` conserva esta instalación adicional; no uses `poetry sync` después de añadir PyTorch, porque podría eliminarlo del entorno.
+PyTorch se instala aparte del archivo `poetry.lock` para poder elegir la variante de GPU. El programa registra las versiones efectivas de Python, NumPy, PyTorch, CUDA, HIP/ROCm y cuDNN. `poetry install` conserva esta instalación adicional; no uses `poetry sync` después de añadir PyTorch, porque podría eliminarlo del entorno.
 
 ## 3. Comprobar la GPU sin entrenar con datos reales
 
@@ -92,7 +108,7 @@ Al terminar aparecerán en `runs/laboratorio/`:
 
 | Archivo o carpeta | Contenido |
 |---|---|
-| `comparison_validation.md` | Tabla legible con MAE, MSE, RMSE, mejora frente a persistencia, parámetros y tiempos |
+| `comparison_validation.md` | Tabla legible con R², MAE, MSE, RMSE, mejora frente a persistencia, parámetros y tiempos |
 | `comparison_validation.csv` | La misma comparación para analizar o graficar |
 | `search_results.csv` | Resultados de los candidatos en los folds temporales |
 | `selection_validation.json` | Mejor red provisional por horizonte y si supera a persistencia |
@@ -118,7 +134,36 @@ Una mejora de RMSE positiva significa que la red mejora la referencia ingenua; u
 
 La configuración está en `configs/training.json`. Si la cambias, conserva la modificación y utiliza una carpeta de resultados nueva. Para estudiar estabilidad se podrán repetir los experimentos con otras semillas; esta primera configuración utiliza una sola.
 
-## Qué queda fuera de esta ejecución
+## 8. Evaluación final tras fijar el modelo
+
+El entrenamiento no evalúa prueba. Cuando haya terminado la búsqueda y estén fijados los modelos y el procedimiento, ejecuta una evaluación independiente:
+
+```bash
+python -m scripts.evaluate_test --run runs/laboratorio --device cuda
+```
+
+También puede ejecutarse con `--device cpu`. Requiere matplotlib, incluido en las dependencias de análisis y en la instalación AMD anterior. Lee los pesos guardados y el escalador original, sin entrenar ni cambiar la selección hecha con validación.
+
+En `runs/laboratorio/test_evaluation/` guarda:
+
+- `evaluation_test.md` y `metrics_test.csv`: R², MAE, MSE y RMSE de cada red y de persistencia, por horizonte.
+- `real_predicho_h*.png`: precios reales frente a predichos, colocados en la fecha objetivo.
+- `errores_h*.png`: error a lo largo del tiempo; permite localizar períodos problemáticos.
+- `metrics_by_year.csv`, `largest_errors.csv` y `predictions_test.csv`: resultados anuales, los cinco mayores errores absolutos de cada combinación y todas las predicciones.
+
+Las fechas de corte de esta primera versión son 18/10/2018 para comenzar validación y 27/10/2022 para comenzar prueba. La preparación excluye las muestras cuyos objetivos o disponibilidad supuesta cruzarían el final del bloque correspondiente. Los escaladores se ajustan únicamente con entrenamiento.
+
+La evaluación usa orígenes sucesivos: en cada fecha entran los precios que ya estarían disponibles según el retraso supuesto de tres días. Los pesos permanecen fijos. No equivale a pronosticar todo el período desde una única fecha sin incorporar observaciones intermedias.
+
+Interpreta los resultados por horizonte y explica cuándo se equivoca la red. R² puede ser negativo; su referencia es la media de los valores evaluados. La mejora frente a persistencia es otra comparación. No hay que afirmar que una red funciona mejor si los resultados no lo respaldan. Si se ajusta de nuevo el modelo después de examinar prueba, ese bloque ya no sirve como prueba independiente de la versión nueva.
+
+## Actualización de datos sin reentrenar
+
+De acuerdo con las recomendaciones del profesor, la aplicación podrá incorporar observaciones mediante un **CSV manual**. No necesita una conexión automática a una API ni reentrenamiento diario.
+
+El flujo previsto es validar fechas y precios, incorporar las observaciones al histórico de inferencia, construir la última ventana con las mismas reglas de preparación, aplicar el escalador guardado y pasarla por la red ya entrenada. La copia histórica del experimento se conserva. Actualizar datos no significa ajustar de nuevo el escalador o los pesos. Esta entrada manual y su integración en la aplicación están pendientes de implementar; el evaluador anterior ya utiliza modelos fijos.
+
+## Qué queda fuera del entrenamiento
 
 **El programa no abre ni evalúa los archivos de prueba.** La validación se usa para elegir hiperparámetros, época y red, por lo que sus errores son cifras de desarrollo y selección. La evaluación independiente en prueba se hará después de fijar el procedimiento.
 

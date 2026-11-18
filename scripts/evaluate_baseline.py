@@ -40,19 +40,22 @@ def main():
             f"Supuesto de disponibilidad: {manifest['config']['publication_lag_bdays']} días lunes-viernes de retraso fijo. No equivale a una reconstrucción histórica de publicaciones.",
             f"Huella de la copia fuente: `{manifest['raw_sha256']}`.", "",
             "## Validación principal", "",
-            "| Horizonte (días lunes-viernes) | Muestras | MAE | RMSE | MSE |",
-            "|---:|---:|---:|---:|---:|"]
+            "| Horizonte (días lunes-viernes) | Muestras | R² | MAE | RMSE | MSE |",
+            "|---:|---:|---:|---:|---:|---:|"]
     for r in rows:
         if r["group"] == "main":
-            text.append(f"| {r['horizon_bdays']} | {r['n']} | {r['mae_usd']:.3f} | {r['rmse_usd']:.3f} | {r['mse_usd2']:.3f} |")
+            r2 = "n.a." if r["r2"] is None else f"{r['r2']:.3f}"
+            text.append(f"| {r['horizon_bdays']} | {r['n']} | {r2} | {r['mae_usd']:.3f} | {r['rmse_usd']:.3f} | {r['mse_usd2']:.3f} |")
     text += ["", "## Validación walk-forward dentro de entrenamiento", "",
-             "| Fold | Horizonte | Muestras | MAE | RMSE | MSE |",
-             "|---|---:|---:|---:|---:|---:|"]
+             "| Fold | Horizonte | Muestras | R² | MAE | RMSE | MSE |",
+             "|---|---:|---:|---:|---:|---:|---:|"]
     for r in rows:
         if r["group"] != "main":
-            text.append(f"| {r['group']} | {r['horizon_bdays']} | {r['n']} | {r['mae_usd']:.3f} | {r['rmse_usd']:.3f} | {r['mse_usd2']:.3f} |")
+            r2 = "n.a." if r["r2"] is None else f"{r['r2']:.3f}"
+            text.append(f"| {r['group']} | {r['horizon_bdays']} | {r['n']} | {r2} | {r['mae_usd']:.3f} | {r['rmse_usd']:.3f} | {r['mse_usd2']:.3f} |")
     text += ["", "## Interpretación", "",
              "Esta tabla fija la referencia que deben superar las redes en las mismas fechas de cada horizonte. Menor MAE o RMSE significa menor error.",
+             "R² puede ser negativo. Su referencia es la media de los valores evaluados, no el modelo de persistencia. Si la serie es constante o solo hay una observación se muestra n.a.",
              "Los horizontes tienen distintos orígenes válidos, por lo que sus cifras no son una comparación con muestra idéntica entre horizontes.",
              "Dentro de cada horizonte se mantendrán exactamente los mismos orígenes y objetivos para los cuatro modelos.",
              "Los errores de horizontes solapados no son independientes. No se calculan intervalos de confianza suponiendo independencia.",

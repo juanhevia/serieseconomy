@@ -12,5 +12,8 @@ def regression_metrics(actual, predicted):
         raise ValueError("No se admiten valores faltantes o infinitos en las métricas.")
     error = predicted - actual
     mse = float(np.mean(error ** 2))
+    total_variation = float(np.sum((actual - actual.mean()) ** 2))
+    # R² no está definido para una sola observación o una serie constante.
+    r2 = float(1 - np.sum(error ** 2) / total_variation) if len(actual) >= 2 and total_variation > 0 else None
     return {"n": len(error), "mae_usd": float(np.mean(np.abs(error))),
-            "mse_usd2": mse, "rmse_usd": float(np.sqrt(mse))}
+            "mse_usd2": mse, "rmse_usd": float(np.sqrt(mse)), "r2": r2}

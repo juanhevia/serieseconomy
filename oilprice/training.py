@@ -102,6 +102,7 @@ def environment_info(device, threads):
         "python": platform.python_version(), "platform": platform.platform(),
         "torch": str(torch.__version__), "numpy": np.__version__,
         "cuda_runtime": torch.version.cuda, "cudnn": torch.backends.cudnn.version(),
+        "hip_runtime": torch.version.hip,
         "device": str(device), "device_name": torch.cuda.get_device_name(device) if device.type == "cuda" else platform.machine(),
         "cpu_threads": threads,
     }
@@ -346,13 +347,15 @@ def run_training(prepared, config, output, device):
              "Los hiperparámetros se seleccionan en los folds temporales por RMSE conjunto en USD/barril (ponderado por número de muestras).",
              "Después se ajusta cada red con entrenamiento principal y parada temprana en validación principal. Se restaura la época con menor MSE de validación.",
              "Estas son cifras de desarrollo y selección, no una evaluación independiente final. El bloque de prueba no se ha abierto.", "",
-             "| Red | Horizonte | N | MAE (USD) | RMSE (USD) | MSE (USD²) | Mejora RMSE (%) | Parámetros | Ajuste (s) | Búsqueda (s) |",
-             "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+             "| Red | Horizonte | N | R² | MAE (USD) | RMSE (USD) | MSE (USD²) | Mejora RMSE (%) | Parámetros | Ajuste (s) | Búsqueda (s) |",
+             "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for row in comparisons:
         improvement = "n.a." if row["improvement_rmse_pct"] is None else f"{row['improvement_rmse_pct']:.2f}"
-        lines.append(f"| {row['architecture']} | {row['horizon_bdays']} | {row['n']} | {row['mae_usd']:.3f} | {row['rmse_usd']:.3f} | {row['mse_usd2']:.3f} | {improvement} | {row['parameters']} | {row['fit_seconds']:.1f} | {row['search_seconds']:.1f} |")
+        r2 = "n.a." if row["r2"] is None else f"{row['r2']:.3f}"
+        lines.append(f"| {row['architecture']} | {row['horizon_bdays']} | {row['n']} | {r2} | {row['mae_usd']:.3f} | {row['rmse_usd']:.3f} | {row['mse_usd2']:.3f} | {improvement} | {row['parameters']} | {row['fit_seconds']:.1f} | {row['search_seconds']:.1f} |")
     lines += ["", "## Lectura de los resultados", "",
               "Una mejora positiva indica menor RMSE que persistencia; una negativa indica peor resultado. No se presupone que una red gane.",
+              "R² puede ser negativo; se compara con la media del bloque evaluado, no con persistencia. Se indica n.a. si no está definido.",
               "El tiempo de ajuste incluye entrenamiento y validación por época. La búsqueda suma todos los candidatos y folds de esa red y horizonte.",
               "Todas las redes comparten ventanas, fechas, semilla, candidatos y presupuesto máximo de épocas; el número de parámetros y la parada temprana pueden diferir.",
               "Se utiliza una sola semilla. Para estudiar estabilidad, repetir el protocolo con otras semillas y directorios nuevos, sin consultar prueba.",

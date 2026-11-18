@@ -112,6 +112,11 @@ class PreprocessingTests(unittest.TestCase):
         self.assertEqual(result["mae_usd"], 1)
         self.assertAlmostEqual(result["mse_usd2"], 5 / 3)
         self.assertAlmostEqual(result["rmse_usd"], np.sqrt(5 / 3))
+        self.assertAlmostEqual(result["r2"], -1 / 14)
+        self.assertEqual(regression_metrics([1, 2, 3], [1, 2, 3])["r2"], 1)
+        self.assertEqual(regression_metrics([1, 2, 3], [2, 2, 2])["r2"], 0)
+        self.assertIsNone(regression_metrics([2, 2], [2, 2])["r2"])
+        self.assertIsNone(regression_metrics([2], [3])["r2"])
         for actual, predicted in [([], []), ([1], [1, 2]), ([1, np.nan], [1, 2])]:
             with self.assertRaises(ValueError):
                 regression_metrics(actual, predicted)
