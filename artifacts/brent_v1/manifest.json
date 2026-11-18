@@ -1,0 +1,238 @@
+{
+  "format_version": 1,
+  "selection_rule": "best_network_on_validation",
+  "selection_sha256": "ad117a26488cfc2f1447907ec9fd52da41207442062bf4d218e6a91ef670f435",
+  "training_signature": {
+    "training_config": {
+      "architectures": [
+        "RNN",
+        "LSTM",
+        "GRU"
+      ],
+      "horizons": [
+        5,
+        63,
+        252
+      ],
+      "candidates": [
+        {
+          "hidden_size": 16,
+          "learning_rate": 0.001
+        },
+        {
+          "hidden_size": 32,
+          "learning_rate": 0.001
+        }
+      ],
+      "max_epochs": 40,
+      "patience": 6,
+      "min_delta": 1e-05,
+      "batch_size": 128,
+      "gradient_clip": 1.0,
+      "seed": 42,
+      "cpu_threads": 2
+    },
+    "prepared_manifest_sha256": "5dffeda402aa545b033e91af267afbcd695af5b8cf99a86303ac1f695508b55d",
+    "source_sha256": {
+      "training.py": "5ad3912beb865fe6b66a8618383fe500af23d8acb3a081bcddb20054a5116aa5",
+      "models.py": "c06f211e71efdb5cbcac187db66516cd2194161c7faf0274dcc3ba45885b2399",
+      "metrics.py": "8443f0185e8d1d7d28f770760e13894d28597891f848de058d9a3ad678d81ae6"
+    },
+    "environment": {
+      "python": "3.14.4",
+      "platform": "Linux-7.0.0-34-generic-x86_64-desconocido-with-glibc2.43",
+      "torch": "2.10.0+rocm7.1",
+      "numpy": "2.5.5",
+      "cuda_runtime": null,
+      "cudnn": 3005001,
+      "hip_runtime": "7.1.25424",
+      "device": "cuda:0",
+      "device_name": "AMD Radeon Graphics",
+      "cpu_threads": 2
+    }
+  },
+  "models": {
+    "5": {
+      "job_id": "rnn_h5_c00_main",
+      "architecture": "RNN",
+      "metadata": {
+        "architecture": "RNN",
+        "candidate": {
+          "hidden_size": 16,
+          "learning_rate": 0.001
+        },
+        "input_size": 1,
+        "window": 60,
+        "horizon_bdays": 5,
+        "group": "main",
+        "scaler": {
+          "mean": 66.48936561309125,
+          "scale": 30.558479953801783,
+          "n_observed": 4461,
+          "first_observation": "2000-01-04",
+          "last_observation": "2018-10-12",
+          "available_before": "2018-10-18"
+        },
+        "preparation_config": {
+          "experiment": "brent_univariate_v1",
+          "start": "2000-01-01",
+          "as_of": "2026-11-05",
+          "validation_start": "2018-10-18",
+          "test_start": "2022-10-27",
+          "window": 60,
+          "horizons": [
+            5,
+            63,
+            252
+          ],
+          "publication_lag_bdays": 3,
+          "max_forward_fill_bdays": 5,
+          "walk_forward_starts": [
+            "2012-01-02",
+            "2014-01-01",
+            "2016-01-01"
+          ],
+          "raw_path": "data/raw/brent_2000-01-01_2026-11-05.csv"
+        },
+        "raw_sha256": "ae1d1210a122d4ed018040d38a2d48cd508b5b93b9ed4e7d416334bd645255f3",
+        "seed": 42,
+        "best_epoch": 7,
+        "torch_version": "2.10.0+rocm7.1"
+      },
+      "weights": "h5.pt",
+      "range": {
+        "nominal_mass": 0.8,
+        "residual_low": -6.828246838490413,
+        "residual_high": 5.662473214435978,
+        "validation_n": 1013,
+        "test_n": 1010,
+        "test_coverage": 0.7495049504950495,
+        "method": "Quantiles 10/90 of actual-predicted validation residuals; validation also used for selection and early stopping; no coverage guarantee."
+      }
+    },
+    "63": {
+      "job_id": "lstm_h63_c01_main",
+      "architecture": "LSTM",
+      "metadata": {
+        "architecture": "LSTM",
+        "candidate": {
+          "hidden_size": 32,
+          "learning_rate": 0.001
+        },
+        "input_size": 1,
+        "window": 60,
+        "horizon_bdays": 63,
+        "group": "main",
+        "scaler": {
+          "mean": 66.48936561309125,
+          "scale": 30.558479953801783,
+          "n_observed": 4461,
+          "first_observation": "2000-01-04",
+          "last_observation": "2018-10-12",
+          "available_before": "2018-10-18"
+        },
+        "preparation_config": {
+          "experiment": "brent_univariate_v1",
+          "start": "2000-01-01",
+          "as_of": "2026-11-05",
+          "validation_start": "2018-10-18",
+          "test_start": "2022-10-27",
+          "window": 60,
+          "horizons": [
+            5,
+            63,
+            252
+          ],
+          "publication_lag_bdays": 3,
+          "max_forward_fill_bdays": 5,
+          "walk_forward_starts": [
+            "2012-01-02",
+            "2014-01-01",
+            "2016-01-01"
+          ],
+          "raw_path": "data/raw/brent_2000-01-01_2026-11-05.csv"
+        },
+        "raw_sha256": "ae1d1210a122d4ed018040d38a2d48cd508b5b93b9ed4e7d416334bd645255f3",
+        "seed": 42,
+        "best_epoch": 5,
+        "torch_version": "2.10.0+rocm7.1"
+      },
+      "weights": "h63.pt",
+      "range": {
+        "nominal_mass": 0.8,
+        "residual_low": -19.557176006597423,
+        "residual_high": 14.185181754183981,
+        "validation_n": 960,
+        "test_n": 955,
+        "test_coverage": 0.7727748691099476,
+        "method": "Quantiles 10/90 of actual-predicted validation residuals; validation also used for selection and early stopping; no coverage guarantee."
+      }
+    },
+    "252": {
+      "job_id": "rnn_h252_c01_main",
+      "architecture": "RNN",
+      "metadata": {
+        "architecture": "RNN",
+        "candidate": {
+          "hidden_size": 32,
+          "learning_rate": 0.001
+        },
+        "input_size": 1,
+        "window": 60,
+        "horizon_bdays": 252,
+        "group": "main",
+        "scaler": {
+          "mean": 66.48936561309125,
+          "scale": 30.558479953801783,
+          "n_observed": 4461,
+          "first_observation": "2000-01-04",
+          "last_observation": "2018-10-12",
+          "available_before": "2018-10-18"
+        },
+        "preparation_config": {
+          "experiment": "brent_univariate_v1",
+          "start": "2000-01-01",
+          "as_of": "2026-11-05",
+          "validation_start": "2018-10-18",
+          "test_start": "2022-10-27",
+          "window": 60,
+          "horizons": [
+            5,
+            63,
+            252
+          ],
+          "publication_lag_bdays": 3,
+          "max_forward_fill_bdays": 5,
+          "walk_forward_starts": [
+            "2012-01-02",
+            "2014-01-01",
+            "2016-01-01"
+          ],
+          "raw_path": "data/raw/brent_2000-01-01_2026-11-05.csv"
+        },
+        "raw_sha256": "ae1d1210a122d4ed018040d38a2d48cd508b5b93b9ed4e7d416334bd645255f3",
+        "seed": 42,
+        "best_epoch": 1,
+        "torch_version": "2.10.0+rocm7.1"
+      },
+      "weights": "h252.pt",
+      "range": {
+        "nominal_mass": 0.8,
+        "residual_low": -25.627852522082513,
+        "residual_high": 41.552151771895566,
+        "validation_n": 773,
+        "test_n": 772,
+        "test_coverage": 0.9041450777202072,
+        "method": "Quantiles 10/90 of actual-predicted validation residuals; validation also used for selection and early stopping; no coverage guarantee."
+      }
+    }
+  },
+  "files": {
+    "h252.pt": "2ced402421dbb33efb0cb4051bbdb1017451edbbdff8c9894b34798402e936de",
+    "h5.pt": "25db259c8f88836c089a28c614c0d7752a1341e62b8724969b167fde4e95f197",
+    "h63.pt": "3fc7aa9ad3d70877624d644821022bdbd9d0809b88f35133b67a3812c9049d7a",
+    "metrics_test.csv": "201364455bc2fabad71a8de143580acba39c573607c7a9dd19c1cbb8e94f866e",
+    "metrics_validation.csv": "bbb1d4bbd19891b1d79dcfc13fba9bb626617bfb5643657d972b64818dc72db5",
+    "predictions_test.csv": "b2d6fcc0f07882d68f36ad9df666df5391c52c041e227d4a459b9e765f7bcc8c"
+  }
+}

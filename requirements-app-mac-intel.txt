@@ -1,0 +1,6 @@
+# Entorno independiente para el Mac Intel; no instalar sobre el de preparación.
+-r requirements-app.txt
+numpy==1.26.4
+pandas==2.2.3
+torch==2.2.2
+pyarrow==19.0.1

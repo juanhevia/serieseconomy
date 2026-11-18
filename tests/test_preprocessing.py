@@ -44,6 +44,8 @@ class PreprocessingTests(unittest.TestCase):
         self.assertEqual(batch["x"].shape[1:], (5, 1))
         for origin, target, y, last in zip(batch["origin_date"], batch["target_date"],
                                            batch["y_usd"], batch["last_observation_date"]):
+            # pandas 2.2 requiere str nativo; pandas 3 también admite numpy.str_.
+            origin, target, last = str(origin), str(target), str(last)
             self.assertEqual(pd.Timestamp(target), pd.Timestamp(origin) + pd.offsets.BDay(5))
             self.assertEqual(y, raw.loc[target])
             self.assertLessEqual(pd.Timestamp(last), pd.Timestamp(origin) - pd.offsets.BDay(2))

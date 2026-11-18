@@ -1,0 +1,5 @@
+# Instalar PyTorch aparte según el equipo; la aplicación infiere en CPU.
+numpy>=1.26,<3
+pandas>=2.2,<4
+streamlit>=1.66,<2
+altair>=5,<7

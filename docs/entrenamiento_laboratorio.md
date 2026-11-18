@@ -1,6 +1,6 @@
 # Entrenar las redes en el laboratorio
 
-El programa está preparado para ejecutar **RNN, LSTM y GRU** con los datos del Brent. El entrenamiento real queda para el laboratorio. Las pruebas del código usan únicamente datos artificiales.
+El programa está preparado para ejecutar **RNN, LSTM y GRU** con los datos del Brent. La primera ejecución real y su evaluación ya se completaron en el laboratorio; esta guía permite reproducir el procedimiento. Las pruebas del código usan únicamente datos artificiales.
 
 ## 1. Obtener el proyecto
 
@@ -161,13 +161,13 @@ Interpreta los resultados por horizonte y explica cuándo se equivoca la red. R�
 
 De acuerdo con las recomendaciones del profesor, la aplicación podrá incorporar observaciones mediante un **CSV manual**. No necesita una conexión automática a una API ni reentrenamiento diario.
 
-El flujo previsto es validar fechas y precios, incorporar las observaciones al histórico de inferencia, construir la última ventana con las mismas reglas de preparación, aplicar el escalador guardado y pasarla por la red ya entrenada. La copia histórica del experimento se conserva. Actualizar datos no significa ajustar de nuevo el escalador o los pesos. Esta entrada manual y su integración en la aplicación están pendientes de implementar; el evaluador anterior ya utiliza modelos fijos.
+El flujo previsto es validar fechas y precios, incorporar las observaciones al histórico de inferencia, construir la última ventana con las mismas reglas de preparación, aplicar el escalador guardado y pasarla por la red ya entrenada. La copia histórica del experimento se conserva. Actualizar datos no significa ajustar de nuevo el escalador o los pesos. La entrada manual y su guardado ya están implementados en la [aplicación](aplicacion.md).
 
 ## Qué queda fuera del entrenamiento
 
 **El programa no abre ni evalúa los archivos de prueba.** La validación se usa para elegir hiperparámetros, época y red, por lo que sus errores son cifras de desarrollo y selección. La evaluación independiente en prueba se hará después de fijar el procedimiento.
 
-Esta versión sigue siendo univariante y conserva los supuestos de la [preparación](preparacion_datos.md), incluido el retraso de publicación supuesto de tres días lunes-viernes. No utiliza aún variables externas, no calcula intervalos de incertidumbre y no crea la aplicación final.
+Esta versión sigue siendo univariante y conserva los supuestos de la [preparación](preparacion_datos.md), incluido el retraso de publicación supuesto de tres días lunes-viernes. No utiliza aún variables externas. La aplicación posterior añade rangos empíricos orientativos a partir de los residuos de validación; no son intervalos con garantía de cobertura.
 
 ## Pruebas del código
 

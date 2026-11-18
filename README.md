@@ -4,7 +4,28 @@ Caso práctico de predicción del precio del petróleo Brent mediante redes RNN,
 
 ## Estado
 
-Preparación del entorno, análisis exploratorio y preparación univariante del Brent completados. La referencia ingenua está evaluada en validación y en tres folds temporales. El código de RNN, LSTM y GRU está preparado para entrenar en el laboratorio y se comprueba con datos sintéticos. **Las redes todavía no están entrenadas con los datos reales**, la prueba final sigue reservada y la aplicación está pendiente.
+La preparación univariante, el entrenamiento real de RNN/LSTM/GRU y la evaluación final están completados. Se ejecutaron los 63 ajustes previstos en el laboratorio. La aplicación permite predecir, mostrar un rango orientativo y actualizar/guardar datos mediante CSV sin reentrenar.
+
+**Resultado:** los modelos elegidos en validación no mejoraron el RMSE de persistencia en prueba. La aplicación conserva esa selección y muestra esta limitación. La versión multivariante y la presentación final siguen pendientes.
+
+## Abrir la aplicación
+
+Los modelos seleccionados y las tablas de resultados están incluidos en `artifacts/brent_v1`; no necesitas entrenar para abrirla.
+
+En un entorno con PyTorch instalado:
+
+```bash
+python -m pip install -r requirements-app.txt
+python -m streamlit run app.py --server.address 127.0.0.1
+```
+
+En el Mac Intel de este proyecto ya está preparado el entorno independiente:
+
+```bash
+.venv-app/bin/python -m streamlit run app.py --server.address 127.0.0.1
+```
+
+La [guía de la aplicación](docs/aplicacion.md) explica la instalación desde cero, el formato del CSV, cómo guardar nuevos datos y las limitaciones del rango. La aplicación funciona en CPU y sin conexión después de instalar las dependencias.
 
 ## Entrenamiento en el laboratorio
 
@@ -27,9 +48,9 @@ Después de terminar y fijar el procedimiento, la evaluación final se ejecuta p
 python -m scripts.evaluate_test --run runs/laboratorio --device cuda
 ```
 
-Genera R², MAE, MSE y RMSE, compara con persistencia y dibuja valores reales frente a predichos y errores por fecha. También guarda métricas por año y los mayores errores para analizar cuándo falla. Utiliza los pesos y escaladores guardados, sin reentrenar. El código se comprueba con datos artificiales; los resultados reales de prueba siguen pendientes. Consulta la guía antes de abrir prueba: ese bloque no debe usarse para elegir hiperparámetros.
+Genera R², MAE, MSE y RMSE, compara con persistencia y dibuja valores reales frente a predichos y errores por fecha. También guarda métricas por año y los mayores errores para analizar cuándo falla. Utiliza los pesos y escaladores guardados, sin reentrenar. La evaluación real de esta versión está completada; sus tablas están incluidas en el paquete de la aplicación. Consulta la guía antes de abrir prueba: ese bloque no debe usarse para elegir hiperparámetros.
 
-La actualización de la futura aplicación se centrará en incorporar observaciones desde un CSV manual y predecir con el modelo existente. Esta funcionalidad todavía está pendiente; no requiere automatizar una API ni entrenar cada día.
+La aplicación incorpora observaciones mediante CSV manual y predice con los pesos y el escalador guardados. El histórico actualizado se guarda por separado de la copia del experimento.
 
 ## Datos listos para entrenar
 
@@ -101,10 +122,8 @@ El resultado se guarda en `data/petroleo_dataset.csv`. Estas fuentes no necesita
 
 ## Trabajo pendiente
 
-1. Ejecutar en el laboratorio el entrenamiento real de RNN, LSTM y GRU y revisar su comparación con la referencia ingenua.
-2. Ampliar la preparación con variables externas y su disponibilidad documentada, comparando con la versión univariante.
-3. Ejecutar la evaluación final preparada para horizontes de 5, 63 y 252 días lunes-viernes, interpretar los aciertos y errores y cuantificar la incertidumbre.
-4. Integrar el modelo elegido en una aplicación Python con actualización manual por CSV sin reentrenar y documentar su ejecución.
-5. Preparar la presentación exigida en el enunciado.
+1. Ampliar la preparación con variables externas y disponibilidad documentada, comparando con la versión univariante mediante un protocolo que reconozca que esta prueba ya se ha consultado.
+2. Si se amplía la evaluación de incertidumbre, reservar una calibración independiente: el rango actual es empírico y orientativo, sin garantía de cobertura.
+3. Preparar la presentación exigida en el enunciado, usando los resultados reales y una demostración de la aplicación.
 
 No guardar tokens ni otras credenciales en el código o en este repositorio.

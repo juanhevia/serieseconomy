@@ -69,3 +69,7 @@
 *.ico    binary
 *.webp   binary
 *.svg    text eol=lf
+
+# Los paquetes de inferencia verifican SHA-256: conservar sus bytes al clonar.
+artifacts/** -text
+*.pt binary
