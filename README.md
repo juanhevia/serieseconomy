@@ -16,14 +16,16 @@ En un entorno con PyTorch instalado:
 
 ```bash
 python -m pip install -r requirements-app.txt
-python -m streamlit run app.py --server.address 127.0.0.1
+python app.py
 ```
 
 En el Mac Intel de este proyecto ya está preparado el entorno independiente:
 
 ```bash
-.venv-app/bin/python -m streamlit run app.py --server.address 127.0.0.1
+.venv-app/bin/python app.py
 ```
+
+Abre `http://127.0.0.1:8502`. La interfaz está construida en HTML, CSS y JavaScript; Python ejecuta los modelos guardados mediante una API local.
 
 La [guía de la aplicación](docs/aplicacion.md) explica la instalación desde cero, el formato del CSV, cómo guardar nuevos datos y las limitaciones del rango. La aplicación funciona en CPU y sin conexión después de instalar las dependencias.
 
