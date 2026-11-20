@@ -17,7 +17,16 @@ function saveStatus() { ['save','save-top'].forEach(id=>$(id).disabled=!state?.c
 function applyState(next) {
   state=next; $('observation-count').textContent=amount(state.observations,0)+' observaciones';
   $('last-date').textContent='Último dato: '+dateLabel(state.last_date);
-  $('origin').max=state.today; $('origin').value=state.origin; saveStatus();
+  $('origin').max=state.today; $('origin').value=state.origin; saveStatus(); drawMarket();
+}
+function drawMarket() {
+  if(!state)return;
+  const rows=state.history.slice(-90), last=rows[rows.length-1];
+  $('market-price').textContent=amount(last[1]);
+  $('market-date').textContent='Último dato · '+dateLabel(last[0]);
+  const values=rows.map(d=>d[1]),lo=Math.min(...values),span=Math.max(1,Math.max(...values)-lo);
+  const path=rows.map((d,i)=>(i?'L':'M')+(i/(rows.length-1)*320).toFixed(2)+','+(92-(d[1]-lo)/span*78).toFixed(2)).join(' ');
+  $('market-chart').innerHTML=`<svg viewBox="0 0 320 110" role="img" aria-label="Brent observado en las últimas 90 observaciones"><defs><linearGradient id="market-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d3ef77" stop-opacity=".24"/><stop offset="1" stop-color="#d3ef77" stop-opacity="0"/></linearGradient></defs><path d="${path} L320,110 L0,110 Z" fill="url(#market-fill)"/><path d="${path}" fill="none" stroke="#d3ef77" stroke-width="2.4" stroke-linejoin="round"/><circle cx="320" cy="${92-(last[1]-lo)/span*78}" r="3.5" fill="#d3ef77"/></svg>`;
 }
 function switchPage(next) {
   page=next;
@@ -84,13 +93,13 @@ function chart(containerId, lines, point=null, markers=[]) {
   for(let i=0;i<=4;i++){let v=ymin+(ymax-ymin)*i/4,y=Y(v);svg+=`<line x1="${p.l}" y1="${y}" x2="${W-p.r}" y2="${y}" stroke="#edf1f7"/><text x="${p.l-9}" y="${y+4}" fill="#8b99ad" font-size="11" text-anchor="end">${amount(v,0)}</text>`;}
   const ticks=W<500?3:5;
   for(let i=0;i<ticks;i++){const t=xmin+(xmax-xmin)*i/(ticks-1),x=p.l+(W-p.l-p.r)*i/(ticks-1);const label=new Date(t).toLocaleDateString('es-ES',{timeZone:'UTC',month:'short',year:'2-digit'});svg+=`<text x="${x}" y="${H-10}" fill="#8b99ad" font-size="11" text-anchor="${i===0?'start':i===ticks-1?'end':'middle'}">${escapeHTML(label)}</text>`;}
-  for(const l of lines){const d=l.data.map((q,i)=>(i?'L':'M')+X(q[0]).toFixed(2)+','+Y(q[1]).toFixed(2)).join(' ');svg+=`<path d="${d}" fill="none" stroke="${l.color}" stroke-width="${lines.length>1?1.6:2.3}" stroke-linecap="round" stroke-linejoin="round"/>`;}
-  if(point){const x=X(point.date);svg+=`<line x1="${x}" y1="${Y(point.low)}" x2="${x}" y2="${Y(point.high)}" stroke="#7155df" stroke-width="5" opacity=".35"/><circle cx="${x}" cy="${Y(point.value)}" r="5" fill="#7155df" stroke="white" stroke-width="2"><title>Predicción: ${amount(point.value)} USD · ${dateLabel(point.date)}</title></circle>`;}
+  for(const l of lines){const d=l.data.map((q,i)=>(i?'L':'M')+X(q[0]).toFixed(2)+','+Y(q[1]).toFixed(2)).join(' ');if(lines.length===1){svg+=`<defs><linearGradient id="fill-${containerId}" x1="0" y1="0" x2="0" y2="1"><stop stop-color="${l.color}" stop-opacity=".14"/><stop offset="1" stop-color="${l.color}" stop-opacity="0"/></linearGradient></defs><path d="${d} L${X(l.data[l.data.length-1][0])},${H-p.b} L${X(l.data[0][0])},${H-p.b} Z" fill="url(#fill-${containerId})"/>`;}svg+=`<path d="${d}" fill="none" stroke="${l.color}" stroke-width="${lines.length>1?1.6:2.3}" stroke-linecap="round" stroke-linejoin="round"/>`;}
+  if(point){const x=X(point.date);svg+=`<line x1="${x}" x2="${x}" y1="${p.t}" y2="${H-p.b}" stroke="#7155df" stroke-dasharray="3 5" opacity=".3"/>`;svg+=`<line x1="${x}" y1="${Y(point.low)}" x2="${x}" y2="${Y(point.high)}" stroke="#7155df" stroke-width="5" opacity=".35"/><circle cx="${x}" cy="${Y(point.value)}" r="5" fill="#7155df" stroke="white" stroke-width="2"><title>Predicción: ${amount(point.value)} USD · ${dateLabel(point.date)}</title></circle>`;}
   for(const m of markers){const x=X(m.date),y=Y(m.value);svg+=`<circle cx="${x}" cy="${y}" r="4.5" fill="#d78b42" stroke="white" stroke-width="1.5"><title>${escapeHTML(m.label)} · ${dateLabel(m.date)} · ${amount(m.value)} USD</title></circle><text x="${Math.min(Math.max(x,65),W-40)}" y="${y-12}" text-anchor="middle" fill="#9c661f" font-size="10">${escapeHTML(m.short)}</text>`;}
   svg+='</svg>';el.innerHTML=svg;
   const tip=document.createElement('div');tip.className='chart-tooltip';tip.hidden=true;el.append(tip);
   const graphic=el.querySelector('svg');
-  graphic.addEventListener('pointermove',event=>{const box=graphic.getBoundingClientRect(),px=(event.clientX-box.left)*W/box.width;if(px<p.l||px>W-p.r){tip.hidden=true;return;}const t=xmin+(px-p.l)/(W-p.l-p.r)*(xmax-xmin),data=lines[0].data;let nearest=data.reduce((a,b)=>Math.abs(toTime(a[0])-t)<Math.abs(toTime(b[0])-t)?a:b);tip.textContent=dateLabel(nearest[0])+' · '+amount(nearest[1])+' USD';tip.hidden=false;tip.style.left=Math.max(0,Math.min(event.clientX-box.left-60,box.width-tip.offsetWidth))+'px';tip.style.top=Math.max(0,event.clientY-box.top-42)+'px';});
+  graphic.addEventListener('pointermove',event=>{const box=graphic.getBoundingClientRect(),px=(event.clientX-box.left)*W/box.width;if(px<p.l||px>W-p.r){tip.hidden=true;return;}const t=xmin+(px-p.l)/(W-p.l-p.r)*(xmax-xmin),data=lines[0].data;let nearest=data.reduce((a,b)=>Math.abs(toTime(a[0])-t)<Math.abs(toTime(b[0])-t)?a:b);tip.textContent=dateLabel(nearest[0])+' · '+(lines.length>1?'Real: ':'')+amount(nearest[1])+' USD';if(lines.length>1){const matched=lines[1].data.find(d=>d[0]===nearest[0]);if(matched)tip.textContent+=' · Predicho: '+amount(matched[1])+' USD';}tip.hidden=false;tip.style.left=Math.max(0,Math.min(event.clientX-box.left-60,box.width-tip.offsetWidth))+'px';tip.style.top=Math.max(0,event.clientY-box.top-42)+'px';});
   graphic.addEventListener('pointerleave',()=>tip.hidden=true);
 }
 function drawForecast(){if(!result)return;chart('forecast-chart',[{color:'#008b80',data:state.history.filter(d=>d[0]<=result.last_observation_date).slice(-260)}],{date:result.target_date,value:result.predicted_usd,low:result.range_low_usd,high:result.range_high_usd});}
