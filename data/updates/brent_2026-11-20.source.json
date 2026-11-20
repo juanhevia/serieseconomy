@@ -1,0 +1,8 @@
+{
+  "source": "EIA via FRED DCOILBRENTEU",
+  "downloaded_on": "2026-11-20",
+  "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2026-11-04&coed=2026-11-20",
+  "last_observation": "2026-11-17",
+  "rows": 10,
+  "sha256": "165db608fd4178f58f838939066af467365d5d44fbe8b5aad7c373ce50c2214e"
+}
