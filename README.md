@@ -141,7 +141,7 @@ No guardar tokens ni otras credenciales en el código o en este repositorio.
 
 ### Actualización de la entrega (20/11/2026)
 
-La presentación sigue la plantilla UAX: `output/pptx/Presentacion_Brent_UAX_entrega_v2.pptx` y `output/pdf/01_presentacion_brent.pdf` (portada + cinco diapositivas).
+La presentación final es `output/pdf/01_presentacion_brent.pdf` (portada + cinco diapositivas): conserva la identidad UAX y utiliza verde, lima y violeta del observatorio. Se genera directamente con `python scripts/build_uax_pdf.py` (ReportLab y fuentes Arial de macOS), sin PowerPoint. El PPTX anterior se conserva como versión previa; el PDF es la versión vigente para entregar.
 
 Para reproducir la demostración del 20/11 en la aplicación pública, cargar `data/updates/brent_2026-11-20.csv`, que añade diez observaciones oficiales hasta el 17/11; seleccionar la fecha 20/11/2026. La procedencia y huella están en el JSON adjunto. Los pesos, escaladores y evaluación original no cambian. Resultados: `reports/demo_app_2026-11-20.json`.
 
