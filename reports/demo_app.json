@@ -1,0 +1,47 @@
+[
+  {
+    "origin_date": "2026-11-06",
+    "last_observation_date": "2026-11-03",
+    "last_available_usd": 107.03,
+    "input_imputed_fraction": 0.016666666666666666,
+    "architecture": "RNN",
+    "horizon_bdays": 5,
+    "target_date": "2026-11-13",
+    "predicted_usd": 109.52116943692903,
+    "change_usd": 2.4911694369290274,
+    "change_pct": 2.3275431532551876,
+    "range_low_usd": 102.69292259843861,
+    "range_high_usd": 115.183642651365,
+    "range_test_coverage": 0.7495049504950495
+  },
+  {
+    "origin_date": "2026-11-06",
+    "last_observation_date": "2026-11-03",
+    "last_available_usd": 107.03,
+    "input_imputed_fraction": 0.016666666666666666,
+    "architecture": "LSTM",
+    "horizon_bdays": 63,
+    "target_date": "2027-02-03",
+    "predicted_usd": 110.87547716604271,
+    "change_usd": 3.8454771660427127,
+    "change_pct": 3.5928965393279575,
+    "range_low_usd": 91.3183011594453,
+    "range_high_usd": 125.0606589202267,
+    "range_test_coverage": 0.7727748691099476
+  },
+  {
+    "origin_date": "2026-11-06",
+    "last_observation_date": "2026-11-03",
+    "last_available_usd": 107.03,
+    "input_imputed_fraction": 0.016666666666666666,
+    "architecture": "RNN",
+    "horizon_bdays": 252,
+    "target_date": "2027-10-26",
+    "predicted_usd": 71.33014027562047,
+    "change_usd": -35.699859724379536,
+    "change_pct": -33.35500301259417,
+    "range_low_usd": 45.70228775353795,
+    "range_high_usd": 112.88229204751603,
+    "range_test_coverage": 0.9041450777202072
+  }
+]

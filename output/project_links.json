@@ -1,0 +1,7 @@
+{
+  "github": "https://github.com/juanhevia/serieseconomy",
+  "models": "https://huggingface.co/juanhevia/brent-rnn-models",
+  "app": "https://huggingface.co/spaces/juanhevia/brent-observatorio",
+  "direct_app": "https://juanhevia-brent-observatorio.static.hf.space/index.html",
+  "verified_date": "20/11/2026"
+}

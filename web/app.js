@@ -6,6 +6,7 @@ const amount = (n, digits=2) => Number(n).toLocaleString('es-ES',{minimumFractio
 const dateLabel = s => new Date(s+'T00:00:00Z').toLocaleDateString('es-ES',{timeZone:'UTC',day:'2-digit',month:'2-digit',year:'numeric'});
 const escapeHTML = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path, body, raw=false) {
+  if(window.brentClient)return window.brentClient.request(path,body,raw);
   const options=body===undefined?{}:{method:'POST',headers:{'X-Brent-Client':'1','Content-Type':raw?'text/csv':'application/json'},body:raw?body:JSON.stringify(body)};
   const response=await fetch(path,options);
   let data; try { data=await response.json(); } catch { throw new Error('No se pudo leer la respuesta del servidor Python.'); }

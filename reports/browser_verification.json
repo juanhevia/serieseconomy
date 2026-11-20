@@ -1,0 +1,8 @@
+{
+  "predictions_checked": 2737,
+  "max_absolute_difference_usd": 0.000014257725553079581,
+  "tolerance_usd": 0.005,
+  "demo_horizons": 3,
+  "csv_checks": "passed",
+  "causality_and_gaps": "passed"
+}

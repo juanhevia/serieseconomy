@@ -84,3 +84,16 @@ Las pruebas `test_inference.py` comprueban causalidad, huecos, validación de CS
 .venv-app/bin/python -m unittest discover -s tests -p 'test_inference.py' -v
 .venv-app/bin/python -m unittest discover -s tests -p 'test_app.py' -v
 ```
+
+
+## Versión pública para evaluación
+
+[Aplicación en Hugging Face Spaces](https://huggingface.co/spaces/juanhevia/brent-observatorio). [Nueve redes en Hugging Face Models](https://huggingface.co/juanhevia/brent-rnn-models).
+
+El alojamiento público es HTML estático. `web/browser_engine.mjs` reproduce las operaciones de las redes RNN y LSTM seleccionadas con sus pesos exportados; no entrena ni usa una API de pago. `web/static_bootstrap.mjs` adapta las acciones de la interfaz a la ejecución en el navegador. Se verificaron las 2.737 predicciones de prueba seleccionadas y los tres escenarios de demostración frente a PyTorch: diferencia máxima 0,000015 USD, por debajo de 0,005 USD. La comparación no es una nueva evaluación ni modifica la selección.
+
+En la demo pública, cada visitante mantiene su propio histórico. «Guardar cambios» conserva los datos en el almacenamiento del navegador, no en el servidor ni en `data/inference/`. Al borrar los datos del navegador se pierde esa copia; usar la descarga CSV para trasladarla. La versión Python local conserva su funcionamiento anterior. Los CSV no se envían a Hugging Face.
+
+Con el respaldo completo de `runs/laboratorio` disponible, `python -m scripts.export_public` prepara en `output/huggingface` los paquetes de modelos y aplicación para publicar. No se incluyen credenciales. El paquete de modelos incluye los nueve ajustes principales; la demo conserva solo las tres redes elegidas antes de abrir prueba.
+
+`node tests/test_browser_engine.mjs` compara la exportación preparada con las predicciones de prueba y comprueba fechas, huecos y validación de CSV. La versión pública no necesita Node para funcionar: Node se usa solo en esta verificación.

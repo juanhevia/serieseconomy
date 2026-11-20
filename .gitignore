@@ -228,3 +228,7 @@ runs/
 
 # Histórico actualizado por el usuario; la copia original permanece intacta.
 data/inference/
+
+# Paquetes de publicación y renders temporales
+output/huggingface/
+tmp/

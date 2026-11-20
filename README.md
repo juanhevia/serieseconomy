@@ -6,7 +6,16 @@ Caso práctico de predicción del precio del petróleo Brent mediante redes RNN,
 
 La preparación univariante, el entrenamiento real de RNN/LSTM/GRU y la evaluación final están completados. Se ejecutaron los 63 ajustes previstos en el laboratorio. La aplicación permite predecir, mostrar un rango orientativo y actualizar/guardar datos mediante CSV sin reentrenar.
 
-**Resultado:** los modelos elegidos en validación no mejoraron el RMSE de persistencia en prueba. La aplicación conserva esa selección y muestra esta limitación. La versión multivariante y la presentación final siguen pendientes.
+**Resultado:** los modelos elegidos en validación no mejoraron el RMSE de persistencia en prueba. La aplicación conserva esa selección y muestra esta limitación. La versión multivariante sigue pendiente; esta limitación se documenta en la presentación.
+
+## Entrega y acceso público
+
+- [Aplicación publicada](https://huggingface.co/spaces/juanhevia/brent-observatorio).
+- [Modelos en Hugging Face](https://huggingface.co/juanhevia/brent-rnn-models): nueve redes, metadatos y resultados.
+- [Presentación PDF](output/pdf/01_presentacion_brent.pdf): portada y cinco diapositivas de contenido.
+- [Enlaces del proyecto PDF](output/pdf/02_enlaces_proyecto.pdf).
+
+La demo pública ejecuta los pesos exportados en el navegador; no requiere una instalación local. Los CSV se procesan y guardan en ese navegador, sin enviarse al servidor. La ejecución original con PyTorch sigue disponible en Python. La exportación se ha comparado con las 2.737 predicciones de prueba de las redes seleccionadas: diferencia máxima de 0,000015 USD (tolerancia de 0,005 USD).
 
 ## Abrir la aplicación
 
@@ -126,6 +135,6 @@ El resultado se guarda en `data/petroleo_dataset.csv`. Estas fuentes no necesita
 
 1. Ampliar la preparación con variables externas y disponibilidad documentada, comparando con la versión univariante mediante un protocolo que reconozca que esta prueba ya se ha consultado.
 2. Si se amplía la evaluación de incertidumbre, reservar una calibración independiente: el rango actual es empírico y orientativo, sin garantía de cobertura.
-3. Preparar la presentación exigida en el enunciado, usando los resultados reales y una demostración de la aplicación.
+3. Actualizar las cinco diapositivas y los enlaces si se amplía el experimento o cambia el despliegue.
 
 No guardar tokens ni otras credenciales en el código o en este repositorio.
